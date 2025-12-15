@@ -1,7 +1,11 @@
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+// Pick ONE theme you like (these don't change your site colors much; code block only)
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+
 import { writeups } from "../data/writeups";
 
 function slugify(str) {
@@ -21,20 +25,29 @@ function getNodeText(node) {
   return "";
 }
 
+// Only include ## headings in TOC (clean, professional)
 function extractHeadings(markdown) {
-  // grabs ## and ### headings for TOC (skip # because that's your page title already)
   const lines = String(markdown || "").split("\n");
   const headings = [];
+
   for (const line of lines) {
-    const m = /^(#{2,3})\s+(.+?)\s*$/.exec(line);
-    if (!m) continue;
-    const level = m[1].length; // 2 or 3
-    const text = m[2].replace(/\s+#\s*$/, "").trim();
+    const match = /^(#{2,3})\s+(.+?)\s*$/.exec(line);
+    if (!match) continue;
+
+    const level = match[1].length; // 2 or 3
+    const text = match[2].replace(/\s+#\s*$/, "").trim();
     if (!text) continue;
-    headings.push({ level, text, id: slugify(text) });
+
+    headings.push({
+      level,
+      text,
+      id: slugify(text),
+    });
   }
+
   return headings;
 }
+
 
 function Chip({ children }) {
   return (
@@ -54,6 +67,88 @@ function MetaRow({ label, value }) {
   );
 }
 
+function scrollToId(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function detectCallout(text) {
+  // Expected patterns inside blockquote: "Rule: ..." "Note: ..." etc.
+  const m = /^(Rule|Note|Warning|Tip)\s*:\s*/i.exec(text || "");
+  if (!m) return null;
+  return m[1].toLowerCase();
+}
+
+function Callout({ type, children }) {
+  const title =
+    type === "rule"
+      ? "Rule"
+      : type === "note"
+      ? "Note"
+      : type === "warning"
+      ? "Warning"
+      : "Tip";
+
+  return (
+    <div className="my-5 rounded-xl border border-gray-700/60 bg-black/20 p-4">
+      <div className="text-sm font-semibold text-[#0FF5C8]">{title}</div>
+      <div className="mt-2 text-sm text-gray-200 leading-relaxed">{children}</div>
+    </div>
+  );
+}
+
+function CodeBlock({ inline, className, children }) {
+  const code = String(children ?? "").replace(/\n$/, "");
+  const match = /language-(\w+)/.exec(className || "");
+  const lang = match?.[1] || "text";
+
+  const [copied, setCopied] = useState(false);
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1000);
+    } catch {
+      // ignore
+    }
+  }
+
+  if (inline) {
+    return <code className={className}>{children}</code>;
+  }
+
+  return (
+    <div className="my-5 rounded-xl border border-gray-700/50 bg-black/30 overflow-hidden">
+      <div className="flex items-center justify-between px-3 py-2 border-b border-gray-700/40">
+        <span className="text-xs text-gray-400">{lang}</span>
+        <button
+          type="button"
+          onClick={copy}
+          className="text-xs px-2 py-1 rounded-md border border-gray-700/60 bg-black/20 text-gray-200 hover:text-[#0FF5C8] transition"
+        >
+          {copied ? "Copied" : "Copy"}
+        </button>
+      </div>
+
+      <SyntaxHighlighter
+        language={lang}
+        style={oneDark}
+        customStyle={{
+          margin: 0,
+          background: "transparent",
+          padding: "14px",
+          fontSize: "0.9rem",
+        }}
+        codeTagProps={{ style: { fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" } }}
+      >
+        {code}
+      </SyntaxHighlighter>
+    </div>
+  );
+}
+
 export default function WriteupDetails() {
   const { slug } = useParams();
 
@@ -66,24 +161,16 @@ export default function WriteupDetails() {
   }, [slug]);
 
   const w = useMemo(() => writeups.find((x) => x.slug === decoded), [decoded]);
-
   const toc = useMemo(() => extractHeadings(w?.content), [w?.content]);
 
   useEffect(() => {
     document.title = w?.title ? `${w.title} | Writeups` : "Writeups";
   }, [w?.title]);
 
-  if (!w) {
-    return (
-      <section className="min-h-screen bg-[#0A0F1F] pt-28 px-6 text-gray-200">
-        <div className="max-w-6xl mx-auto">
-          <div className="rounded-2xl border border-gray-800/60 bg-black/20 p-6">
-            Writeup not found.
-          </div>
-        </div>
-      </section>
-    );
-  }
+if (!w) {
+  window.location.replace("/404.html");
+  return null;
+}
 
   const summary = w.summary || w.description || "";
 
@@ -118,7 +205,6 @@ export default function WriteupDetails() {
             </p>
           )}
 
-          {/* Mobile chips */}
           <div className="mt-5 flex flex-wrap gap-2 sm:hidden">
             {w.category && <Chip>{w.category}</Chip>}
             {w.difficulty && <Chip>Difficulty: {w.difficulty}</Chip>}
@@ -145,7 +231,7 @@ export default function WriteupDetails() {
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
                 {(w.tags || []).length ? (
-                  w.tags.map((t) => <Chip key={t}>{t}</Chip>)
+                  w.tags.map((t) => <Chip key={t} >{t}</Chip>)
                 ) : (
                   <div className="text-sm text-gray-400">No tags</div>
                 )}
@@ -166,12 +252,6 @@ export default function WriteupDetails() {
                   prose-a:text-[#0FF5C8]
                   prose-code:text-[#0FF5C8]
                   prose-strong:text-gray-100
-                  prose-pre:bg-black/40
-                  prose-pre:border prose-pre:border-gray-700/50
-                  prose-pre:rounded-xl
-                  prose-pre:overflow-x-auto
-                  prose-blockquote:border-l-[#0FF5C8]
-                  prose-blockquote:text-gray-300
                   prose-hr:border-gray-700/40
                   prose-li:marker:text-gray-500
                 "
@@ -179,15 +259,31 @@ export default function WriteupDetails() {
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={{
-                    h2: ({ node, ...props }) => {
+                    // headings get IDs for TOC scrolling
+                    h2: ({ ...props }) => {
                       const text = getNodeText(props.children);
                       const id = slugify(text);
                       return <h2 id={id} {...props} />;
                     },
-                    h3: ({ node, ...props }) => {
-                      const text = getNodeText(props.children);
+                    h3: ({ children, ...props }) => {
+                      const text = getNodeText(children);
                       const id = slugify(text);
-                      return <h3 id={id} {...props} />;
+                      return <h3 id={id} {...props}>{children}</h3>;
+                    },
+
+                    // code highlighting + copy
+                    code: CodeBlock,
+
+                    // callout blocks from blockquotes
+                    blockquote: ({ children }) => {
+                      const raw = getNodeText(children);
+                      const type = detectCallout(raw);
+
+                      if (!type) return <blockquote>{children}</blockquote>;
+
+                      // remove the "Rule:" prefix visually (optional)
+                      const cleaned = raw.replace(/^(Rule|Note|Warning|Tip)\s*:\s*/i, "");
+                      return <Callout type={type}>{cleaned}</Callout>;
                     },
                   }}
                 >
@@ -214,20 +310,20 @@ export default function WriteupDetails() {
                   {toc?.length ? (
                     <ul className="space-y-2">
                       {toc.map((h) => (
-                        <li key={h.id} className={h.level === 3 ? "pl-4" : ""}>
-                          <a
-                            href={`#${h.id}`}
-                            className="text-sm text-gray-300 hover:text-[#0FF5C8] transition"
+                        <li key={h.id}>
+                          <button
+                            type="button"
+                            onClick={() => scrollToId(h.id)}
+                            className="text-left text-sm text-gray-300 hover:text-[#0FF5C8] transition"
                           >
                             {h.text}
-                          </a>
+                          </button>
                         </li>
                       ))}
                     </ul>
                   ) : (
                     <div className="text-sm text-gray-400">
-                      Add <code>##</code> / <code>###</code> headings in your
-                      markdown to generate a TOC.
+                      Add <code>###</code> headings in your markdown to generate a TOC.
                     </div>
                   )}
                 </div>
@@ -238,16 +334,15 @@ export default function WriteupDetails() {
                   Writing checklist
                 </div>
                 <ul className="mt-3 text-sm text-gray-300 space-y-2">
-                  <li>• Overview: target, goal, impact, fix</li>
-                  <li>• Clear PoC requests + evidence</li>
-                  <li>• Mitigation steps and references</li>
+                  <li>• Objective + constraints</li>
+                  <li>• Commands + results</li>
+                  <li>• Final flag / impact / conclusion</li>
                 </ul>
               </div>
             </div>
           </aside>
         </div>
 
-        {/* Footer spacing */}
         <div className="h-16" />
       </div>
     </section>

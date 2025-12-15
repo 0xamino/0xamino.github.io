@@ -121,7 +121,7 @@ export const writeups = Object.entries(mdModules)
         updated: normalizeDate(data.updated),
 
         // Media
-        image: data.image || "Images/icons/0xamino.png",
+        image: data.cover || "Images/icons/default.png",
 
         // Keep any extra fields from front-matter available
         ...data,
