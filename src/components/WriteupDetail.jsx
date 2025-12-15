@@ -20,7 +20,7 @@ export default function WriteupDetails() {
   return (
     <section className="min-h-screen bg-[#0A0F1F] pt-28 px-6 text-gray-200">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl md:text-5xl font-bold text-[#0FF5C8]">
+        <h1 className="text-1xl md:text-5xl font-bold text-[#0FF5C8]">
           {w.title}
         </h1>
 

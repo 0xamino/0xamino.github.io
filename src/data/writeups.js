@@ -2,7 +2,12 @@
 
 // Load all markdown writeups under src/content/writeups
 const mdModules = import.meta.glob("../content/writeups/**/*.md", {
-  as: "raw",
+  // REMOVE THIS: as: "raw", 
+  
+  // ADD THESE TWO LINES:
+  query: "?raw",
+  import: "default",
+  
   eager: true,
 });
 
