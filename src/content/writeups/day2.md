@@ -1,14 +1,47 @@
 ---
-title: "Syndicate Infrastructure — DNS Reconnaissance"
+title: "Blind SQLi via Time Delay in Product Search"
+slug: "blind-sqli-time-delay-product-search"
 date: "2025-12-15"
-event: "Advent of CTF 2025 — CyberStudents"
-category: "Miscellaneous"
-points: 121
-author: "qvipin"
-tags: ["DNS", "Test", "Network Forensics"]
-excerpt: "DNS recon notes + solution steps."
+updated: "2025-12-15"
+summary: "Exploited a time-based blind SQL injection to extract data safely using controlled delays."
+tags: ["web", "sqli", "bugbounty", "writeup"]
+category: "Web Exploitation"
+difficulty: "Medium"
+toc: true
 ---
-# Your writeup...
-## test test test
 
-![Alt text](Images/Writeups/CyberStudents.png "a title")
+
+# Overview
+## Overview
+### Overview
+##### Overview
+- **Target:** (lab / app name)
+- **Goal:** (what you wanted to achieve)
+- **Impact:** (what an attacker can do)
+- **Root cause:** (1 sentence)
+- **Fix:** (1 sentence)
+
+## Scope & Rules
+- What was in scope
+- What you avoided (no data exfil, no DoS, etc.)
+
+## Recon
+Explain briefly:
+- Entry points found
+- Interesting parameters / endpoints
+
+## Vulnerability
+### Finding
+Explain the vulnerability clearly:
+- Where it is
+- Why it exists
+- What input reaches what sink
+
+### Proof of Concept
+Show minimal PoC steps:
+
+```bash
+# request
+curl '...'
+
+
