@@ -11,4 +11,4 @@ excerpt: "DNS recon notes + solution steps."
 # Your writeup...
 ## test test test
 
-![Alt text](/public/Images/Writeups/CyberStudents.png "a title")
+![Alt text](Images/Writeups/CyberStudents.png "a title")
