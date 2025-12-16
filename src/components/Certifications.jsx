@@ -7,7 +7,7 @@ export default function Certifications() {
     {
       name: "eWPTXv2 — Web Application Penetration Tester Extreme",
       issuer: "INE / eLearnSecurity",
-      date: "In Progress (2025)",
+      date: "Augest 2024",
       logo: "Images/Certificates/ewptx.png", // replace with your real logo
       link: "https://certs.ine.com/15c169f4-8cce-4813-b690-42baaf8d5932"
     },
@@ -26,59 +26,58 @@ export default function Certifications() {
   ];
 
   return (
-    <section id="certs" ref={ref} className={`py-24 bg-[#0D1117] text-white transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+<section
+      id="certs"
+      ref={ref}
+      className={`py-24 bg-[#0D1117] text-white transition-all duration-700 ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
       }`}
     >
       <div className="max-w-6xl mx-auto px-6">
-
         <h2 className="text-4xl font-bold mb-12 text-neon">
           Certifications
         </h2>
 
-        <div className="grid md:grid-cols-3 gap-10">
-
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
           {certs.map((cert, index) => (
-            <div
+            <a
               key={index}
-              className="bg-cybersurface p-6 rounded-lg border border-neon/20 hover:shadow-neon transition-shadow"
+              href={cert.link}
+              target="_blank"
+              rel="noreferrer"
+              // MATCHED: flex, flex-col, h-full, same borders and hover effects
+              className="group bg-cybersurface rounded-lg border border-neon/20 overflow-hidden hover:shadow-neon transition-shadow flex flex-col h-full"
             >
-
-              {/* Logo */}
-              <div className="h-20 flex justify-center items-center mb-4">
+              {/* Image - MATCHED: h-40 container. Used object-contain for logos so they don't get cropped. */}
+              <div className="h-40 bg-black overflow-hidden shrink-0 p-4 flex items-center justify-center">
                 <img
                   src={cert.logo}
-                  alt="Certification Logo"
-                  // className="w-full h-20 object-cover rounded-lg transition-transform duration-300 hover:scale-105"
-                  className=" w-full h-28 object-cover rounded-lg transition-all duration-300 hover:scale-105 hover:brightness-110 hover:shadow-lg hover:shadow-cyan-500/20"
+                  alt={cert.name}
+                  className=" w-full h-28  object-cover rounded-lg transition-all duration-300 hover:scale-105 hover:brightness-110 hover:shadow-lg hover:shadow-cyan-500/20"
                 />
               </div>
 
-              {/* Text */}
-              <h3 className="text-x1 font-semibold text-neon mb-2">
-                {cert.name}
-              </h3>
+              {/* Content - MATCHED: flex-1 flex flex-col to push footer down */}
+              <div className="p-6 space-y-4 flex-1 flex flex-col">
+                
+                {/* Date */}
+                <p className="text-xs text-gray-400">
+                  {cert.date}
+                </p>
 
-              <p className="text-gray-300 text-sm mb-1">{cert.issuer}</p>
-              <p className="text-gray-400 text-xs">{cert.date}</p>
-              
-              {/* Button */}
-              <div className="pt-3">
-                <a
-                  href={cert.link}
-                  target="_blank"
-                  className="block text-center w-full px-4 py-2 border border-neon text-neon rounded-md hover:bg-neon/10 transition"
-                >
-                  View →
-                </a>
+                {/* Title - MATCHED: text-xl font-semibold text-neonblue */}
+                <h3 className="text-xl font-semibold text-neonblue">
+                  {cert.name}
+                </h3>
+
+                {/* Issuer - MATCHED: flex-1 to fill space */}
+                <p className="text-gray-300 text-sm flex-1">
+                  Issued by {cert.issuer}
+                </p>
               </div>
-
-            </div>
-
-            
+            </a>
           ))}
-
         </div>
-
       </div>
     </section>
   );
