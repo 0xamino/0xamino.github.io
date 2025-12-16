@@ -1,35 +1,27 @@
 #!/usr/bin/env node
 import { execSync } from "node:child_process";
-import fs from "node:fs";
 
 function sh(cmd) {
-  console.log(`> ${cmd}`);
   execSync(cmd, { stdio: "inherit" });
 }
 
 try {
-  // 1. Build the project
-  console.log("\n🔨 Building project...");
-  sh('npm run build');
+  
+  // Ensure we are at repo root (works even if run from elsewhere)
+  sh('git rev-parse --show-toplevel');
 
-  // 2. Ensure dist exists
-  if (!fs.existsSync("dist")) {
-    throw new Error("dist/ folder not found after build!");
-  }
-
-  // 3. Copy README.md into dist/ so it gets uploaded too
+  // Sanity checks
+  sh('git remote get-url public_deploy > /dev/null');
+  sh('test -d dist || (echo "dist/ not found. Run build first." && exit 1)');
   console.log("\n📄 Copying README to dist...");
-  fs.copyFileSync("README.md", "dist/README.md");
+  sh('cp README.md dist/README.md');
+  // Create subtree split branch, force push to public repo, then cleanup
+  sh('git subtree split --prefix dist -b deploy-dist');
+  sh('git push public_deploy deploy-dist:main --force');
+  sh('git branch -D deploy-dist');
 
-  // 4. Deploy the folder using gh-pages
-  // This initializes a temp repo in 'dist', adds all files (including readme),
-  // and force pushes to 'public_deploy'
-  console.log("\n🚀 Deploying to public_deploy...");
-  sh('npx gh-pages -d dist -r public_deploy');
-
-  console.log("\n✅ Deployed successfully!");
-
+  console.log("\n✅ Deployed dist/ to public_deploy:main");
 } catch (e) {
-  console.error("\n❌ Deploy failed:", e.message);
+  console.error("\n❌ Deploy failed.");
   process.exit(1);
 }
