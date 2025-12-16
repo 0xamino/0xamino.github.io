@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function Hero() {
   const handleDownloadCV = () => {
-    const fileId = "1rLaOEp_wXDbhnO9B6n7QRY3nlWj5nrwX";
+    const fileId = "1AEAUKnyuqqcWgxTOwtdAH1zUxhpQXe6L";
 
     window.open(`https://drive.google.com/file/d/${fileId}/view`, "_blank");
     setTimeout(() => {
