@@ -364,7 +364,11 @@ This challenge highlighted the dangers of custom cryptographic implementations a
 ### 🩸 First Blood
 |  |  |
 | :---: | :---: |
-| ![Alt1](/Images/Writeups/challenge.png) | ![Alt2](/Images/Writeups/challenge2.jpeg) |`,Hn=`---
+| ![Alt1](/Images/Writeups/challenge.png) | ![Alt2](/Images/Writeups/challenge2.jpeg) |
+
+
+### 2️⃣ Part 2 URL
+[Part 2 Writeup - BSides Only-invited party Revenge](https://0xamino.github.io/#/writeups/bsides_only-invited_perty_revenge)`,Hn=`---
 
 title: "BSides Only-invited party REVENGE — PoW on Precompiles"
 date: "2025-12-21"
@@ -758,7 +762,10 @@ This "Revenge" challenge was a brilliant exercise in EVM internals. It demonstra
 ### 🩸 First Blood
 |  |  |
 | :---: | :---: |
-| ![Alt1](/Images/Writeups/challenge3.png) | ![Alt2](/Images/Writeups/challenge4.png) |`,Un=`---
+| ![Alt1](/Images/Writeups/challenge3.png) | ![Alt2](/Images/Writeups/challenge4.png) |
+
+### 1️⃣ Part 1 URL
+[Part 1 Writeup - BSides Only-invited party](https://0xamino.github.io/#/writeups/bsides_only-invited_party)`,Un=`---
 
 title: "Syndicate Infrastructure — DNS Reconnaissance"
 date: "2025-12-15"
