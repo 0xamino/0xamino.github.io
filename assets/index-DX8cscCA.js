@@ -114,6 +114,67 @@ function startParty(address sponsor, bytes memory signature) external {
 #### Impact: address(0) (0x0000000000000000000000000000000000000000) trivially satisfies this loop.
 
 ---
+
+### 🔌 Connection & Proof-of-Work
+
+Before analyzing the contract, we need to launch an instance. The challenge server requires solving a Proof-of-Work (PoW) to prevent spam.
+
+**1. Connect via Netcat:**
+\`\`\`bash
+nc 34.154.155.203 31337
+\`\`\`
+2. Select Launch: The server prompts for an action.
+
+Choose Option 1 to launch a new instance.
+
+\`\`\`Plaintext
+
+1 - launch new instance
+2 - kill instance
+3 - get flag (if isSolved() is true)
+action? 1
+\`\`\`
+3. Solve the PoW: The server presents a SHA256 challenge. You must find a suffix that, when appended to the provided prefix, results in a hash starting with 24 binary zeros.
+**Example Challenge:**
+
+\`\`\`Plaintext
+
+== PoW ==
+  sha256("74e2b7feee5cf9aa" + YOUR_INPUT) must start with 24 zeros in binary representation
+Run the provided solver command in a separate terminal:
+
+python3 <(curl -sSL [https://minaminao.github.io/tools/solve-pow.py](https://minaminao.github.io/tools/solve-pow.py)) 74e2b7feee5cf9aa 24
+4. Input the Solution: The script will calculate the correct input.
+\`\`\`
+**open a new terminal and run:**
+\`\`\`bash
+python3 <(curl -sSL https://minaminao.github.io/tools/solve-pow.py) 74e2b7feee5cf9aa 24
+\`\`\`
+**NOTE:**  **74e2b7feee5cf9aa** will be different each time; use the prefix provided by your server. 
+
+The output will look like this:
+
+\`\`\`Plaintext
+your_input = b'52451139'
+digest.hex() = '000000905bcd80aa3725a232ac643fc97bb00add1935f205849f65c5ab08bdf3'
+time.time() - start_time = 63.74122095108032
+
+\`\`\`
+Copy the integer result (52451139) [**Will be different in your case**] and paste it back into the netcat terminal.
+
+5. Get Credentials: Upon success, the server deploys your private blockchain and provides the connection details:
+
+\`\`\`text
+UUID: 5e49e6c4-86da-4cf9-a236-0d4ba5e440c9
+
+RPC Endpoint: http://34.154.155.203:8545/5e49e6c4-86da-4cf9-a236-0d4ba5e440c9
+
+Private Key: 0x666cfb8ccbc7e13dc7b8c5f3deceb901290aa3075c036544d3da6f716dad0862
+
+Challenge Contract: 0x8F6ebC8fe5F3087ce9B2e14e0a8e057FFD1B86F2
+\`\`\`
+
+---
 ### 💻 The Solution Code
 I developed a two-part solution: a Solidity contract to handle the reentrancy and a Python script to orchestrate the attack and exploit the cryptographic bugs.
 
@@ -274,6 +335,12 @@ if __name__ == "__main__":
     main()
 
 \`\`\`
+**Notes:**
+- Make sure to replace **YOUR_UUID**, **YOUR_PRIVATE_KEY**, **YOUR_PLAYER_ADDRESS**, and **YOUR_SETUP_ADDR** with the actual values provided by the challenge server.
+- Make sure that **Exploit.sol** and **solve.py** at the same place.
+
+
+- After you run the Python script, and you saw the success message, go back to the netcat terminal and choose option 3 to get the flag.
 ![Alt1](/Images/Writeups/bsides1.png)
 ![Alt1](/Images/Writeups/bsides2.png)
 
@@ -326,7 +393,7 @@ However, the **startParty** function was modified to prevent the easy **address(
 
 ---
 
-### 🧭 1. Diffing the Patch
+### 🧭 Diffing the Patch
 
 I compared the new **Guardian.sol** with the original. The patch was simple but seemingly effective:
 
@@ -345,14 +412,14 @@ function startParty(address sponsor, bytes memory signature) external {
 The zero address is explicitly banned. However, the loop still allows any address where the first 18 bytes are zero.
 
 --- 
-### 🕵️‍♂️ 2. Finding a New Sponsor
+### 🕵️‍♂️ Finding a New Sponsor
 I needed an address that:Is not 0x00...00. Has 18 leading null bytes.The Ethereum Precompiled Contracts live in this exact address space (0x01 to 0x09). 
 
 
 I selected the SHA-256 Precompile:➡️ 0x0000000000000000000000000000000000000002 
 
 --- 
-### ⛏️ 3. The "Mining" Attack Vector
+### ⛏️ The "Mining" Attack Vector
 
 When we pass 0x02 as the sponsor, the contract performs this check:
 
@@ -372,7 +439,67 @@ This means: We must find an input signature such that SHA256(Input) starts with 
 
 This turned the exploit into a Proof-of-Work mining challenge.
 
-### 💻 4. The Solution Code
+### 🔌 Connection & Proof-of-Work
+
+Before analyzing the contract, we need to launch an instance. The challenge server requires solving a Proof-of-Work (PoW) to prevent spam.
+
+**1. Connect via Netcat:**
+\`\`\`bash
+nc 34.154.155.203 31337
+\`\`\`
+2. Select Launch: The server prompts for an action.
+
+Choose Option 1 to launch a new instance.
+
+\`\`\`Plaintext
+
+1 - launch new instance
+2 - kill instance
+3 - get flag (if isSolved() is true)
+action? 1
+\`\`\`
+3. Solve the PoW: The server presents a SHA256 challenge. You must find a suffix that, when appended to the provided prefix, results in a hash starting with 24 binary zeros.
+**Example Challenge:**
+
+\`\`\`Plaintext
+
+== PoW ==
+  sha256("74e2b7feee5cf9aa" + YOUR_INPUT) must start with 24 zeros in binary representation
+Run the provided solver command in a separate terminal:
+
+python3 <(curl -sSL [https://minaminao.github.io/tools/solve-pow.py](https://minaminao.github.io/tools/solve-pow.py)) 74e2b7feee5cf9aa 24
+4. Input the Solution: The script will calculate the correct input.
+\`\`\`
+**open a new terminal and run:**
+\`\`\`bash
+python3 <(curl -sSL https://minaminao.github.io/tools/solve-pow.py) 74e2b7feee5cf9aa 24
+\`\`\`
+**NOTE:**  **74e2b7feee5cf9aa** will be different each time; use the prefix provided by your server. 
+
+The output will look like this:
+
+\`\`\`Plaintext
+your_input = b'52451139'
+digest.hex() = '000000905bcd80aa3725a232ac643fc97bb00add1935f205849f65c5ab08bdf3'
+time.time() - start_time = 63.74122095108032
+
+\`\`\`
+Copy the integer result (52451139) [**Will be different in your case**] and paste it back into the netcat terminal.
+
+5. Get Credentials: Upon success, the server deploys your private blockchain and provides the connection details:
+
+\`\`\`text
+UUID: 5e49e6c4-86da-4cf9-a236-0d4ba5e440c9
+
+RPC Endpoint: http://34.154.155.203:8545/5e49e6c4-86da-4cf9-a236-0d4ba5e440c9
+
+Private Key: 0x666cfb8ccbc7e13dc7b8c5f3deceb901290aa3075c036544d3da6f716dad0862
+
+Challenge Contract: 0x8F6ebC8fe5F3087ce9B2e14e0a8e057FFD1B86F2
+\`\`\`
+
+
+### 💻 The Solution Code
 
 I reused the **Exploit.sol** from the first challenge for the reentrancy attack (which remained unpatched) and wrote a new Python script to mine the SHA-256 collision.
 
@@ -601,6 +728,12 @@ if __name__ == "__main__":
     main()
 
 \`\`\`
+**Notes:**
+- Make sure to replace **YOUR_UUID**, **YOUR_PRIVATE_KEY**, **YOUR_PLAYER_ADDRESS**, and **YOUR_SETUP_ADDR** with the actual values provided by the challenge server.
+- Make sure that **Exploit.sol** and **solve_revenge.py** at the same place.
+
+
+- After you run the Python script, and you saw the success message, go back to the netcat terminal and choose option 3 to get the flag.
 ![Alt1](/Images/Writeups/bsides3.png)
 ![Alt1](/Images/Writeups/bsides4.png)
 --- 
