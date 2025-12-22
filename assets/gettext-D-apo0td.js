@@ -1,0 +1,1 @@
+import{t as e}from"./gettext-DPt47sVc.js";export{e as default};

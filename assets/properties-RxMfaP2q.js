@@ -1,0 +1,1 @@
+import{t as e}from"./properties-D-uG02y2.js";export default e();

@@ -1,0 +1,1 @@
+import{t as e}from"./bash-B921t1Zs.js";export default e();

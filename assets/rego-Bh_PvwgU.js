@@ -1,0 +1,1 @@
+import{t as e}from"./rego-vC_LZYch.js";export{e as default};

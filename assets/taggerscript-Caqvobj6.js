@@ -1,0 +1,1 @@
+import{t as e}from"./taggerscript-BK7x__0p.js";export default e();

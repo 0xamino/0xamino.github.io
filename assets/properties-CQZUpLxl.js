@@ -1,0 +1,1 @@
+import{t as e}from"./properties-I6KUf9s-.js";export{e as default};

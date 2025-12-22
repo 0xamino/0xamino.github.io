@@ -1,0 +1,1 @@
+import{t as e}from"./golo-DRVP1Eow.js";export default e();

@@ -1,0 +1,1 @@
+import{t as e}from"./rib-C6VvJifK.js";export default e();

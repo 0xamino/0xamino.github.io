@@ -1,0 +1,1 @@
+import{t as e}from"./perl-C8GYUJlv.js";export default e();

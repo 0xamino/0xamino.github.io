@@ -1,0 +1,1 @@
+import{t as e}from"./pascaligo-BAmnQM5W.js";export{e as default};

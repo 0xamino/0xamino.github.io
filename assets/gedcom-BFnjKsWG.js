@@ -1,0 +1,1 @@
+import{t as e}from"./gedcom--svCQ5fP.js";export{e as default};

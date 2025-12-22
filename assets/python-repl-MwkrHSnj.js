@@ -1,0 +1,1 @@
+import{u as e}from"./index-D6Y3ME5k.js";var t=e(((e,t)=>{function n(e){return{aliases:[`pycon`],contains:[{className:`meta`,starts:{end:/ |$/,starts:{end:`$`,subLanguage:`python`}},variants:[{begin:/^>>>(?=[ ]|$)/},{begin:/^\.\.\.(?=[ ]|$)/}]}]}}t.exports=n}));export{t};

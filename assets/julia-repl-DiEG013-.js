@@ -1,0 +1,1 @@
+import{u as e}from"./index-D6Y3ME5k.js";var t=e(((e,t)=>{function n(e){return{name:`Julia REPL`,contains:[{className:`meta`,begin:/^julia>/,relevance:10,starts:{end:/^(?![ ]{6})/,subLanguage:`julia`},aliases:[`jldoctest`]}]}}t.exports=n}));export{t};

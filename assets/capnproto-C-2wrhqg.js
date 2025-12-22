@@ -1,0 +1,1 @@
+import{t as e}from"./capnproto-RS6m0eRe.js";export default e();

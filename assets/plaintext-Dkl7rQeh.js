@@ -1,0 +1,1 @@
+import{u as e}from"./index-D6Y3ME5k.js";var t=e(((e,t)=>{function n(e){return{name:`Plain text`,aliases:[`text`,`txt`],disableAutodetect:!0}}t.exports=n}));export{t};

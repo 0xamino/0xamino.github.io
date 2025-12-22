@@ -1,0 +1,1 @@
+import{u as e}from"./index-D6Y3ME5k.js";var t=e(((e,t)=>{function n(e){return{name:`VBScript in HTML`,subLanguage:`xml`,contains:[{begin:`<%`,end:`%>`,subLanguage:`vbscript`}]}}t.exports=n}));export{t};

@@ -1,0 +1,1 @@
+import{t as e}from"./coq-3mR28coq.js";export{e as default};

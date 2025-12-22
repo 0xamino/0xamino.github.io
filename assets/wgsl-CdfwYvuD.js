@@ -1,0 +1,1 @@
+import{t as e}from"./wgsl-BFvTQcjg.js";export{e as default};

@@ -1,0 +1,1 @@
+import{t as e}from"./xquery-BBvlULc0.js";export default e();

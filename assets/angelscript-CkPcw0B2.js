@@ -1,0 +1,1 @@
+import{t as e}from"./angelscript-CifjaHMn.js";export default e();

@@ -1,0 +1,1 @@
+import{t as e}from"./typoscript-BqYeFKGZ.js";export{e as default};
