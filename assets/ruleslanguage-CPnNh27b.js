@@ -1,1 +1,0 @@
-import{t as e}from"./ruleslanguage-C8CXRIAG.js";export default e();

@@ -1,1 +1,0 @@
-import{t as e}from"./django-DieWgTWJ.js";export default e();

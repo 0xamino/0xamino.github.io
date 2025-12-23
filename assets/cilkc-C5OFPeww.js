@@ -1,1 +1,0 @@
-import{t as e}from"./c-CP9f3To3.js";t.displayName=`cilkc`,t.aliases=[`cilk-c`];function t(t){t.register(e),t.languages.cilkc=t.languages.insertBefore(`c`,`function`,{"parallel-keyword":{pattern:/\bcilk_(?:for|reducer|s(?:cope|pawn|ync))\b/,alias:`keyword`}}),t.languages[`cilk-c`]=t.languages.cilkc}export{t};

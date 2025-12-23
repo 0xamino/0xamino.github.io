@@ -1,1 +1,0 @@
-import"./clike-BRKJlsaG.js";import"./java-Cj8EuRAW.js";import"./mata-CEFfaO8d.js";import"./python-DeYadGfO.js";import{t as e}from"./stata-Be_0LDGZ.js";export{e as default};

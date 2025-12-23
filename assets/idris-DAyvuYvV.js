@@ -1,1 +1,0 @@
-import"./haskell-B1dTJ9Gr.js";import{t as e}from"./idris-N-grm4MD.js";export{e as default};

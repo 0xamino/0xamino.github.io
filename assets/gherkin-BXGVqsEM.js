@@ -1,1 +1,0 @@
-import{t as e}from"./gherkin--wiXsuoZ.js";export default e();

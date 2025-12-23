@@ -1,1 +1,0 @@
-import{t as e}from"./pgsql-DQHa8zeV.js";export default e();

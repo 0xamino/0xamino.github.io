@@ -1,1 +1,0 @@
-import{t as e}from"./editorconfig-CGu9RmgU.js";export{e as default};

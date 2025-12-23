@@ -1,1 +1,0 @@
-import{t as e}from"./applescript-Cxy4Bbk4.js";export default e();

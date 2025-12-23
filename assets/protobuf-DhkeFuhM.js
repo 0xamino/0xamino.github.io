@@ -1,1 +1,0 @@
-import{t as e}from"./protobuf-BJOTR7SD.js";export default e();

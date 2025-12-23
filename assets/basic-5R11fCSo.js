@@ -1,1 +1,0 @@
-import{t as e}from"./basic-CUVtFHbH.js";export default e();

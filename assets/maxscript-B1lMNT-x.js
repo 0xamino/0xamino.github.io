@@ -1,1 +1,0 @@
-import{t as e}from"./maxscript-B9PbrZZO.js";export{e as default};

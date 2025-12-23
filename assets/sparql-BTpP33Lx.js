@@ -1,1 +1,0 @@
-import"./turtle-qDFEFwMf.js";import{t as e}from"./sparql-CXi9OIli.js";export{e as default};
