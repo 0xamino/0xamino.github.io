@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <title>Private</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        height: 100%;
+      }
+
+      body {
+        min-height: 100%;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        background: #0a0f1f;
+        color: #e5e7eb;
+        font-family: ui-monospace, "JetBrains Mono", SFMono-Regular, Menlo,
+          Consolas, monospace;
+      }
+
+      /* ------------------------------------------------------------------ */
+      /* Background marquees                                                */
+      /* ------------------------------------------------------------------ */
+
+      #bg {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .marquee {
+        position: absolute;
+        left: 0;
+        right: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        font-size: clamp(1rem, 2.4vw, 1.8rem);
+        letter-spacing: 0.42em;
+        text-transform: uppercase;
+        color: rgba(15, 245, 200, 0.16);
+      }
+
+      .marquee-top {
+        top: 8%;
+      }
+
+      .marquee-bottom {
+        bottom: 7%;
+      }
+
+      .marquee-track {
+        display: inline-flex;
+        will-change: transform;
+        animation: slide 40s linear infinite;
+      }
+
+      .marquee-bottom .marquee-track {
+        animation-direction: reverse;
+      }
+
+      @keyframes slide {
+        to {
+          transform: translateX(-50%);
+        }
+      }
+
+      /* ------------------------------------------------------------------ */
+      /* Stage: eye — form — eye                                            */
+      /* ------------------------------------------------------------------ */
+
+      .stage {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(0.4rem, 1.8vw, 2rem);
+        width: 100%;
+        padding: 1.25rem;
+      }
+
+      .eye {
+        flex: 0 0 auto;
+        width: clamp(36px, 13vw, 220px);
+        opacity: 0.9;
+      }
+
+      .eye-pupil {
+        animation: look 7s ease-in-out infinite;
+      }
+
+      @keyframes look {
+        0%,
+        100% {
+          transform: translateX(-80px);
+        }
+        50% {
+          transform: translateX(80px);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .eye-pupil,
+        .marquee-track {
+          animation: none;
+        }
+      }
+
+      /* ------------------------------------------------------------------ */
+      /* Password gate                                                      */
+      /* ------------------------------------------------------------------ */
+
+      #gate {
+        position: relative;
+        z-index: 1;
+        flex: 0 1 380px;
+        min-width: 0;
+        padding: clamp(1.25rem, 5vw, 2rem);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        background: rgba(20, 26, 41, 0.72);
+        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+      }
+
+      #gate h1 {
+        margin: 0 0 0.35rem;
+        font-size: 1.05rem;
+        letter-spacing: 0.06em;
+        color: #0ff5c8;
+      }
+
+      #gate p {
+        margin: 0 0 1.25rem;
+        font-size: 0.8rem;
+        line-height: 1.5;
+        color: #9ca3af;
+      }
+
+      input[type="password"] {
+        width: 100%;
+        padding: 0.7rem 0.85rem;
+        border: 1px solid rgba(15, 245, 200, 0.25);
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.35);
+        color: #fff;
+        font: inherit;
+        outline: none;
+      }
+
+      input[type="password"]:focus {
+        border-color: rgba(15, 245, 200, 0.6);
+      }
+
+      button {
+        width: 100%;
+        margin-top: 0.9rem;
+        padding: 0.7rem;
+        border: 1px solid #0ff5c8;
+        border-radius: 10px;
+        background: rgba(15, 245, 200, 0.08);
+        color: #0ff5c8;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: rgba(15, 245, 200, 0.16);
+      }
+
+      button:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+
+      #error {
+        min-height: 1.1em;
+        margin-top: 0.8rem;
+        font-size: 0.78rem;
+        color: #f87171;
+      }
+
+      /* ------------------------------------------------------------------ */
+      /* Unlocked content                                                   */
+      /* ------------------------------------------------------------------ */
+
+      #frame {
+        position: fixed;
+        inset: 0;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: #fff;
+      }
+
+      #frame[hidden] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="bg" aria-hidden="true">
+      <div class="marquee marquee-top">
+        <div
+          class="marquee-track"
+          data-phrase="AUTHORIZED PERSONNEL ONLY • "
+        ></div>
+      </div>
+      <div class="marquee marquee-bottom">
+        <div
+          class="marquee-track"
+          data-phrase="RESTRICTED ACCESS • ENCRYPTED • "
+        ></div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <svg class="eye" viewBox="0 0 600 300" aria-hidden="true">
+        <defs>
+          <clipPath id="eye-shape">
+            <path d="M20 150 Q300 6 580 150 Q300 294 20 150 Z" />
+          </clipPath>
+          <radialGradient id="iris" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#0ff5c8" stop-opacity="0.95" />
+            <stop offset="65%" stop-color="#0b6b5c" stop-opacity="0.6" />
+            <stop offset="100%" stop-color="#04121a" stop-opacity="0.9" />
+          </radialGradient>
+        </defs>
+
+        <g clip-path="url(#eye-shape)">
+          <path
+            d="M20 150 Q300 6 580 150 Q300 294 20 150 Z"
+            fill="rgba(15, 245, 200, 0.05)"
+          />
+          <g class="eye-pupil">
+            <circle cx="300" cy="150" r="105" fill="url(#iris)" />
+            <circle cx="300" cy="150" r="46" fill="#02080d" />
+            <circle cx="268" cy="120" r="15" fill="#dffff8" opacity="0.75" />
+          </g>
+        </g>
+
+        <path
+          d="M20 150 Q300 6 580 150 Q300 294 20 150 Z"
+          fill="none"
+          stroke="#0ff5c8"
+          stroke-width="3"
+          opacity="0.5"
+        />
+      </svg>
+
+      <form id="gate">
+        <h1>// RESTRICTED</h1>
+        <p>Enter the password to view this page.</p>
+        <input
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          autofocus
+          required
+        />
+        <button id="submit" type="submit">Unlock</button>
+        <div id="error" role="alert"></div>
+      </form>
+
+      <svg class="eye" viewBox="0 0 600 300" aria-hidden="true">
+        <g clip-path="url(#eye-shape)">
+          <path
+            d="M20 150 Q300 6 580 150 Q300 294 20 150 Z"
+            fill="rgba(15, 245, 200, 0.05)"
+          />
+          <g class="eye-pupil">
+            <circle cx="300" cy="150" r="105" fill="url(#iris)" />
+            <circle cx="300" cy="150" r="46" fill="#02080d" />
+            <circle cx="268" cy="120" r="15" fill="#dffff8" opacity="0.75" />
+          </g>
+        </g>
+
+        <path
+          d="M20 150 Q300 6 580 150 Q300 294 20 150 Z"
+          fill="none"
+          stroke="#0ff5c8"
+          stroke-width="3"
+          opacity="0.5"
+        />
+      </svg>
+    </div>
+
+    <iframe id="frame" hidden allowfullscreen title="Private content"></iframe>
+
+    <script src="private.config.js"></script>
+    <script>
+      (() => {
+        "use strict";
+
+        const SESSION_TTL = 30 * 60 * 1000;
+        const STORAGE_KEY = "vault.key";
+        const EXPIRY_KEY = "vault.expires";
+
+        // Two identical halves per track make the -50% translate loop seamless.
+        document.querySelectorAll(".marquee-track").forEach((track) => {
+          const phrase = track.dataset.phrase || "";
+          for (let i = 0; i < 2; i += 1) {
+            const half = document.createElement("span");
+            half.textContent = phrase.repeat(6);
+            track.appendChild(half);
+          }
+        });
+
+        const VAULT = window.VAULT;
+        const frame = document.getElementById("frame");
+        const stage = document.querySelector(".stage");
+        const background = document.getElementById("bg");
+        const gate = document.getElementById("gate");
+        const input = document.getElementById("password");
+        const submit = document.getElementById("submit");
+        const errorBox = document.getElementById("error");
+        const encoder = new TextEncoder();
+
+        let expiryTimer = 0;
+        let sessionExpiresAt = 0;
+
+        const fromBase64 = (value) => {
+          const binary = atob(value);
+          const bytes = new Uint8Array(binary.length);
+          for (let i = 0; i < binary.length; i += 1) {
+            bytes[i] = binary.charCodeAt(i);
+          }
+          return bytes;
+        };
+
+        const toBase64 = (bytes) => {
+          let binary = "";
+          for (const byte of bytes) binary += String.fromCharCode(byte);
+          return btoa(binary);
+        };
+
+        const setError = (message) => {
+          errorBox.textContent = message;
+        };
+
+        const clearSession = () => {
+          try {
+            sessionStorage.removeItem(STORAGE_KEY);
+            sessionStorage.removeItem(EXPIRY_KEY);
+          } catch {
+            // ignore
+          }
+        };
+
+        const lock = () => {
+          clearSession();
+          window.location.reload();
+        };
+
+        const scheduleLock = (expiresAt) => {
+          sessionExpiresAt = expiresAt;
+          window.clearTimeout(expiryTimer);
+          expiryTimer = window.setTimeout(
+            lock,
+            Math.max(0, expiresAt - Date.now()),
+          );
+        };
+
+        const decryptUrl = async (key) => {
+          const plaintext = await crypto.subtle.decrypt(
+            { name: "AES-GCM", iv: fromBase64(VAULT.iv) },
+            key,
+            fromBase64(VAULT.ct),
+          );
+          return new TextDecoder().decode(plaintext);
+        };
+
+        const show = (url) => {
+          frame.src = url;
+          frame.hidden = false;
+          stage?.remove();
+          background?.remove();
+        };
+
+        const unlock = async (key, expiresAt) => {
+          const url = await decryptUrl(key);
+          scheduleLock(expiresAt);
+          show(url);
+        };
+
+        const unlockWithPassword = async (password) => {
+          const material = await crypto.subtle.importKey(
+            "raw",
+            encoder.encode(password),
+            "PBKDF2",
+            false,
+            ["deriveKey"],
+          );
+          const key = await crypto.subtle.deriveKey(
+            {
+              name: "PBKDF2",
+              salt: fromBase64(VAULT.salt),
+              iterations: VAULT.iter,
+              hash: "SHA-256",
+            },
+            material,
+            { name: "AES-GCM", length: 256 },
+            true,
+            ["decrypt"],
+          );
+
+          const expiresAt = Date.now() + SESSION_TTL;
+          try {
+            const raw = new Uint8Array(
+              await crypto.subtle.exportKey("raw", key),
+            );
+            sessionStorage.setItem(STORAGE_KEY, toBase64(raw));
+            sessionStorage.setItem(EXPIRY_KEY, String(expiresAt));
+          } catch {
+            // Storage unavailable: unlocking still works, refresh will re-prompt.
+          }
+
+          await unlock(key, expiresAt);
+        };
+
+        const restoreSession = async () => {
+          let saved = null;
+          let expiresAt = 0;
+          try {
+            saved = sessionStorage.getItem(STORAGE_KEY);
+            expiresAt = Number(sessionStorage.getItem(EXPIRY_KEY) || 0);
+          } catch {
+            return false;
+          }
+          if (!saved || !expiresAt) return false;
+
+          if (Date.now() >= expiresAt) {
+            clearSession();
+            return false;
+          }
+
+          try {
+            const key = await crypto.subtle.importKey(
+              "raw",
+              fromBase64(saved),
+              { name: "AES-GCM" },
+              false,
+              ["decrypt"],
+            );
+            await unlock(key, expiresAt);
+            return true;
+          } catch {
+            clearSession();
+            return false;
+          }
+        };
+
+        const init = async () => {
+          if (!window.crypto?.subtle) {
+            setError("This page requires HTTPS and a modern browser.");
+            input.disabled = true;
+            submit.disabled = true;
+            return;
+          }
+
+          if (!VAULT || !VAULT.ct) {
+            setError("This page is not configured yet.");
+            input.disabled = true;
+            submit.disabled = true;
+            return;
+          }
+
+          if (await restoreSession()) return;
+          input.focus();
+        };
+
+        // Background tabs throttle timers, so re-check when the tab wakes.
+        document.addEventListener("visibilitychange", () => {
+          if (
+            document.visibilityState === "visible" &&
+            sessionExpiresAt &&
+            Date.now() >= sessionExpiresAt
+          ) {
+            lock();
+          }
+        });
+
+        gate.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          setError("");
+          submit.disabled = true;
+          submit.textContent = "Unlocking…";
+
+          try {
+            await unlockWithPassword(input.value);
+          } catch {
+            setError("Incorrect password.");
+            input.value = "";
+            input.focus();
+            submit.disabled = false;
+            submit.textContent = "Unlock";
+          }
+        });
+
+        init();
+      })();
+    </script>
+  </body>
+</html>
