@@ -16,5 +16,5 @@ This repository contains the static deployment of my portfolio.
 | **About** | Experience & Certifications |
 
 ### // Contact
-* **Mail:** alamenalaa8@gmail.com
+* **Mail:** alamen.alaa.sec@gmail.com
 * **LinkedIn:** [Alamin Alaa](https://www.linkedin.com/in/alaminalaa8)

@@ -1,7 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta http-equiv="refresh" content="0; url=./index.html" />
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirecting…</title>
+    <script>
+      (function () {
+        var path = window.location.pathname;
+        // GitHub Pages serves this file for unknown paths. Send those paths
+        // into the hash router so /archive and /writeups/<slug> still work.
+        path = path.replace(/\/+$/, "") || "/";
+        if (path === "/index.html" || path === "/404.html") {
+          path = "/";
+        }
+        window.location.replace("/#" + path);
+      })();
+    </script>
   </head>
   <body></body>
 </html>
